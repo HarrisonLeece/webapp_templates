@@ -1,0 +1,88 @@
+{% extends "base.html" %}
+{% block title %} Chat Text {% endblock %}
+{% block content %}
+<script>
+function levenshteinDistance(s, t) {
+    if (!s.length) return t.length;
+    if (!t.length) return s.length;
+
+    return Math.min(
+        levenshteinDistance(s.substr(1), t) + 1,
+        levenshteinDistance(t.substr(1), s) + 1,
+        levenshteinDistance(s.substr(1), t.substr(1)) + (s[0] !== t[0] ? 1 : 0)
+    ) + 1;
+}
+
+var blocker;
+
+function search_comments(field) {
+  const fuzzy = false;
+  let search_param = field.value;
+  let temp = document.getElementById("comments").innerHTML.toLowerCase();
+  if (search_param == "" || null) {
+    search_param = 'xxfgdx2#xxsdfgx#x!xghxx'
+  }
+  let count = 0;
+  if (fuzzy) {
+    clearTimeout(blocker);
+    blocker = setTimeout(1000);
+    let results = temp.match(/("[^"]+"|[^"\s]+)/g)
+    for (const word in results) {
+      const dist = levenshteinDistance(word, search_param);
+      if (dist <= 1) {
+        count = count++
+      }
+    }
+  } else {
+    let regex = new RegExp(search_param.toLowerCase(), 'g');
+    try {
+      count = ((temp || []).match(regex)).length;
+    } catch {
+      count = 0
+    }
+
+  }
+  document.getElementById("num_search").innerHTML = count;
+}
+</script>
+<form action="#", method="post">
+<div class="container-fluid">
+  <div class="row g">
+    <div class="col-lg">
+      <div class="form-floating">
+        <input type="text" class="form-control" name="search_form_input" id="search_form_input" placeholder="Search" value="" name='search' onkeyup="search_comments(this)">
+        <label for="floatingInputGrid">Search Conditions</label>
+      </div>
+    </div>
+    <div class="col-sm", id="num_searched_items">
+        <h3> Number of search occurences: <span id="num_search"></span> </h3>
+        <output id="search_result"> </output>
+    </div>
+  </div>
+  <div class="row g">
+    <div class="col-sm">
+        <label for="customRange3" class="form-label">Search 'fuzziness'</label>
+        <input type="range" class="form-range" min="1" max="3" step="1" id="customRange3", name = "fuzz_range">
+    </div>
+    <div class ="col-sm">
+    </div>
+    <div class ="col-sm">
+    </div>
+  </div>
+  <div>
+  <style type="text/css">
+    p {margin-bottom: 0em;  margin-top: 0em;}
+  </style>
+  <h3>Fuzzy search results: {{search_standin}}</h3>
+  <h3>Number of Comments: {{num_coms}} </h3>
+
+    <p id="comments">
+      {% for user_comment_pair in data %}
+      {{user_comment_pair}} <br>
+      {% endfor %}
+    </p>
+
+  </div>
+</div>
+</form>
+{% endblock %}

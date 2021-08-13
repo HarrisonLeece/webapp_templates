@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% block title %} Chat Text {% endblock %}
+{% block content %}
+<div class="container-fluid">
+<h3> Twitch VOD URL: </h3>
+<p> URLs should be entered into the 'Twitch VOD URL' field as follows : https://www.twitch.tv/videos/919480866 <br>
+  The app should now ignore filters at the end of URLs.
+</p>
+<h3> Filtering Search Parameters </h3>
+There are two filters which can be used effectively with this tool.
+Filters are necessary due to mispellings and intentional mis-types common to twitch chats<br>
+1) Browser Ctrl-F <br>
+The browser find tool is more useful for small search strings, such as "NHL", "NFL", "JB".
+Searching by "Whole Words" allows small searches from matching with 'junk' twitch chats <br>
+2) In-tool parameter search <br>
+The In-tool parameter search is useful for longer search strings, such as "Logitech" or "Frameline44".
+The in-tool search will look for words which are similar to the search parameter, but not necessarily exact.
+The search term must be 'entered' to the site to engage in a 'fuzzy' search.  Not caps sensitive.  The following examples show a search parameter, an example word, and the fuzziness which would catch that word <br>
+Example1: Search Parameter: >Logitech<  \- Kogitech = 1 - logiteched = 2 - ogirec = 3 <br>
+Example2: Search Parameter: >Xperi< \- xxxperi = 2 - expire = 3 - peri = 1
+
+<h3>Twitch Helix maintainence</h3>
+<p>Twitch uses their 'Helix' API to serve data about vods.  <br>
+The twitch api requires both a Client ID string and and a private key. <br>
+Go to https://dev.twitch.tv/console/ and sign in to generate a Client ID and private key.
+Current Client ID and private key are held by Harrison Leece.
+The /app/main.py directory contains the code snip which makes the call to Helix.  If something suddenly stops working, check there.
+</p>
+</div>
+{% endblock %}
